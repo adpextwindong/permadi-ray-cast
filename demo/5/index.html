@@ -14,7 +14,8 @@
 		<canvas id="gameCanvas" width="600" height="200">
             <!-- Insert fallback content here -->
         </canvas>
-		
+        <canvas id="skyboxCanvas" width="900" height="200"</canvas>
+
 	<p>
 	Fifth in a series of ray casting demos:
 	<li>Panoramic background using prerendered bitmap.	
@@ -28,7 +29,8 @@
 	
 	<script>
 		var canvas = document.getElementById("gameCanvas");
-		var gameWindow=new GameWindow(canvas);
+    var skyboxDebugCanvas = document.getElementById("skyboxCanvas");
+		var gameWindow =new GameWindow(canvas, skyboxDebugCanvas);
 		gameWindow.start();
 	</script>	
 </html>

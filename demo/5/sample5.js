@@ -40,14 +40,16 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ***********************************************/
-function GameWindow(canvas) {
+function GameWindow(canvas, skyboxCanvas) {
     this.width = canvas.width;
     this.height = canvas.height;  
     this.frameRate =24;
     // create the main canvas
     this.canvas = canvas;  
     this.canvasContext = this.canvas.getContext( '2d' );
-     
+    this.skyboxDebugCanvas = skyboxCanvas;
+    this.skyboxDebugCanvasContext = this.skyboxDebugCanvas.getContext('2d');
+
     // create the offscreen buffer (canvas)
     this.offscreenCanvas = document.createElement('canvas');
     this.offscreenCanvas.width = canvas.width;
@@ -415,12 +417,41 @@ GameWindow.prototype =
 		//this.offscreenCanvasContext.clearRect(0, 0, this.width, this.height);
 		if (this.fBackgroundTextureBuffer!=undefined)
 		{
-			this.offscreenCanvasContext.drawImage(this.fBackgroundTexture,
-				0,0, 
-				this.PROJECTIONPLANEWIDTH-this.fBackgroundImageArc, this.PROJECTIONPLANEHEIGHT,
-				this.fBackgroundImageArc, 0, 
-				this.PROJECTIONPLANEWIDTH-this.fBackgroundImageArc, this.PROJECTIONPLANEHEIGHT);		
-			this.offscreenCanvasPixels=this.offscreenCanvasContext.getImageData(0,0,canvas.width, canvas.height);	
+      console.log("\n");
+      console.log("DEBUG -- BG FRAME");
+      console.log("fBackgroundImageArc : " + this.fBackgroundImageArc);
+      console.log("PROJECTION PLANE WIDTH : " + this.PROJECTIONPLANEWIDTH);
+      var sWidth = this.PROJECTIONPLANEWIDTH-this.fBackgroundImageArc;
+      var sHeight = this.PROJECTIONPLANEHEIGHT;
+
+      var dWidth = this.PROJECTIONPLANEWIDTH-this.fBackgroundImageArc;
+      var dHeight = this.PROJECTIONPLANEHEIGHT;
+
+      console.log("sWidth : " + sWidth);
+      console.log("dWidth : " +  dWidth);
+      console.log("dx : " + this.fBackgroundImageArc);
+      console.log("\n");
+
+      this.skyboxDebugCanvasContext.drawImage(this.fBackgroundTexture,0,0);
+      this.skyboxDebugCanvasContext.strokeStyle = '#00FF00';
+      this.skyboxDebugCanvasContext.strokeRect(
+        - this.fBackgroundImageArc
+        ,0
+        ,this.PROJECTIONPLANEWIDTH
+        ,sHeight);
+
+			this.offscreenCanvasContext.drawImage(
+        this.fBackgroundTexture, //Image
+        0, //sx
+				0, //sy
+				sWidth,
+        sHeight, // sHeight
+				this.fBackgroundImageArc, //dx
+        0, //dy
+				dWidth, //dWidth
+        dHeight); //dHeight
+
+			this.offscreenCanvasPixels=this.offscreenCanvasContext.getImageData(0,0,canvas.width, canvas.height);
 		}
 	},
 	
